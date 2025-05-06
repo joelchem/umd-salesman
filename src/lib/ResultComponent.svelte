@@ -10,7 +10,7 @@
   {/if}
 
   {#each order.slice(1) as building, i}
-    <p>{getTraveltime(building, order[i])} minutes</p>
+    <p>⬇️ {getTraveltime(building, order[i])}min 🕒</p>
     <p>{building}</p>
   {/each}
 </div>

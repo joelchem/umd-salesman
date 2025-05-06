@@ -26,12 +26,13 @@
             <button
               aria-label="remove {building}"
               onclick={() => {
-                selectedBuildings = selectedBuildings.filter(b => b != building);
+                selectedBuildings = selectedBuildings.filter(
+                  (b) => b != building
+                );
               }}
               class="border-0 hover:border-0 bg-transparent cursor-pointer ml-2 outline-0"
             >
-              <i class="fa-solid fa-xmark text-gray-300"
-              ></i>
+              <i class="fa-solid fa-xmark text-gray-300"></i>
             </button>
           </li>
         {/each}
@@ -40,30 +41,29 @@
 
     <div>
       <AutoComplete
-      items={buildings}
-      bind:text={inpBuilding}
-      placeholder="Add Building..."
-      onChange={async (e: string) => {
-        if (e && !selectedBuildings.find(b => b == e)) {
-          selectedBuildings.push(e);
-        }
-        inpBuilding = "";
-      }}
-      className="w-[20rem] border-1 justify-start rounded-md border-gray-400"
-      inputClassName="p-2"
-    />
+        items={buildings.sort()}
+        bind:text={inpBuilding}
+        placeholder="Add Destination..."
+        onChange={async (e: string) => {
+          if (e && !selectedBuildings.find((b) => b == e)) {
+            selectedBuildings.push(e);
+          }
+          inpBuilding = "";
+        }}
+        className="w-[20rem] border-1 justify-start rounded-md border-gray-400"
+        inputClassName="p-2"
+      />
     </div>
-    
+
     <div class="mt-4">
       <button
-      class="py-2 px-8 text-white rounded-md bg-blue-500 font-bold hover:bg-blue-600 cursor-pointer focus:border-0"
-      >Generate Routes</button>
+        class="py-2 px-8 text-white rounded-md bg-blue-500 font-bold hover:bg-blue-600 cursor-pointer focus:border-0"
+        >Generate Routes</button
+      >
     </div>
 
     <div>
-      <ResultComponent order={selectedBuildings}/>
+      <ResultComponent order={selectedBuildings} />
     </div>
-    
-
   </div>
 </main>
