@@ -3,9 +3,10 @@
   import AutoComplete from "simple-svelte-autocomplete";
   import { buildings } from "./routing/buildings";
   import ResultComponent from "./lib/ResultComponent.svelte";
+  import { fade } from "svelte/transition";
 
-  let selectedBuildings: String[] = $state([]);
-  let inpBuilding: String | undefined = $state(undefined);
+  let selectedBuildings: string[] = $state([]);
+  let inpBuilding: string | undefined = $state(undefined);
 </script>
 
 <main class="bg-white h-full w-full flex justify-center">
@@ -42,7 +43,7 @@
       items={buildings}
       bind:text={inpBuilding}
       placeholder="Add Building..."
-      onChange={async (e: String) => {
+      onChange={async (e: string) => {
         if (e && !selectedBuildings.find(b => b == e)) {
           selectedBuildings.push(e);
         }
@@ -60,7 +61,7 @@
     </div>
 
     <div>
-      <ResultComponent word="world"/>
+      <ResultComponent order={selectedBuildings}/>
     </div>
     
 
