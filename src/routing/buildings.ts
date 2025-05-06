@@ -5,8 +5,8 @@ export const buildings = await (await fetch("building-names.json")).json();
 const traveltimes = await (await fetch("traveltimes.json")).json();
 
 export function countTraveltime(counter: Counter, b1: string, b2: string) {
-    counter.val += 1
-    getTraveltime(b1, b2);
+    counter.val += 1;
+    return getTraveltime(b1, b2);
 } 
 
 export function getTraveltime(b1: string, b2: string) {
