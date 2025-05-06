@@ -3,7 +3,6 @@
   import AutoComplete from "simple-svelte-autocomplete";
   import { buildings } from "./routing/buildings";
   import ResultComponent from "./lib/ResultComponent.svelte";
-  import { fade } from "svelte/transition";
 
   let selectedBuildings: string[] = $state([]);
   let inpBuilding: string | undefined = $state(undefined);
@@ -55,15 +54,19 @@
       />
     </div>
 
-    <div class="mt-4">
+    <!-- <div class="mt-4">
       <button
         class="py-2 px-8 text-white rounded-md bg-blue-500 font-bold hover:bg-blue-600 cursor-pointer focus:border-0"
         >Generate Routes</button
       >
-    </div>
+    </div> -->
 
-    <div>
-      <ResultComponent order={selectedBuildings} />
+    <hr class="my-8">
+
+    <div class="flex flex-row gap-4 w-full">
+      <ResultComponent order={selectedBuildings} name="Brute Force"/>
+      <ResultComponent order={selectedBuildings} name="2-Opt"/>
+      <ResultComponent order={selectedBuildings} name="Nearest Neighbor"/>
     </div>
   </div>
 </main>
