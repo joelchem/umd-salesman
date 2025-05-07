@@ -10,7 +10,9 @@ export function countTraveltime(counter: Counter, b1: string, b2: string) {
 } 
 
 export function getTraveltime(b1: string, b2: string) {
-
+    if(!b1 || !b2) {
+        console.log(b1, b2)
+    }
     b1 = b1.substring(0,3);
     b2 = b2.substring(0,3);
 

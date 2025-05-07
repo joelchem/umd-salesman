@@ -1,18 +1,27 @@
 import { Counter } from "../types";
 import { countTraveltime } from "./buildings";
 
-export function allPermutations(buildings: string[]) {
+export async function allPermutations(buildings: string[]) {    
+    
+    if(Math.random() < 0.001) {
+        await new Promise(r => setTimeout(r))
+    }
+
     if(buildings.length == 0) {
         return [[],];
     }
 
     let out: string[][] = [];
-    buildings.forEach(b => {
-        let tails = allPermutations(buildings.filter(x => x != b));
-        tails.forEach(t => {
-            out.push([b].concat(t))
-        })
-    })
+    for (let b of buildings) {
+        let tails = await allPermutations(buildings.filter(x => x !== b));
+        for (let t of tails) {
+            out.push([b].concat(t));
+            if(Math.random() < 0.001) {
+                await new Promise(r => setTimeout(r))
+            }
+        }
+    }
+    
     return out;
 }
 
@@ -26,9 +35,13 @@ export function getTime(counter: Counter, order: string[]) {
 
 export async function bruteForce(buildings: string[]) {
 
-    let counter = new Counter();
+    let start = Date.now();
 
-    let perms = allPermutations(buildings);
+    let counter = new Counter();
+    let startBuilding = buildings[0]
+
+    let perms = (await allPermutations(buildings.filter(x => x != startBuilding))).map(p => [startBuilding].concat(p));
+
     let fastestTotal = getTime(counter, perms[0]);
     let fastestPerm = perms[0]
 
@@ -41,7 +54,8 @@ export async function bruteForce(buildings: string[]) {
 
         }
     })
-    return {counter, order: fastestPerm};
+    let time = (Date.now() - start);
+    return {counter, order: fastestPerm, time};
 
 }
 
@@ -50,5 +64,31 @@ export async function twoOpt(buildings: string[]) {
 }
 
 export async function nearestNeighbor(buildings: string[]) {
+
+    let start = Date.now();
+    let counter = new Counter();
+
+    let order = [buildings[0],];
+    buildings = buildings.filter(x => x != order[0]);
+    
+    while (buildings.length > 0) {
+
+        let closestBuilding = buildings[0];
+        let closestDist = Infinity;
+
+        buildings.forEach(b => {
+            let dist = countTraveltime(counter, b, order[order.length - 1]);
+            if(dist < closestDist) {
+                closestBuilding = b;
+                closestDist = dist;
+            }
+        });
+
+        order.push(closestBuilding);
+        buildings = buildings.filter(x => x != closestBuilding);
+    }
+
+    let time = (Date.now() - start);
+    return {counter, order, time};
 
 }

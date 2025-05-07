@@ -3,13 +3,49 @@
   import AutoComplete from "simple-svelte-autocomplete";
   import { buildings } from "./routing/buildings";
   import ResultComponent from "./lib/ResultComponent.svelte";
-  import { bruteForce } from "./routing/algorithms";
+  import { bruteForce, nearestNeighbor } from "./routing/algorithms";
+  import type { AlgorithmResults } from "./types";
+  import { tick } from "svelte";
 
   let selectedBuildings: string[] = $state([]);
   let inpBuilding: string | undefined = $state(undefined);
 
+  let bruteForceResults: AlgorithmResults | undefined =  $state(undefined);
+  let bruteForceLoading: boolean = $state(false);
+
+  let twoOptResults: AlgorithmResults | undefined =  $state(undefined);
+  let twoOptLoading: boolean = $state(false);
+
+  let nearestNeighborResults: AlgorithmResults | undefined =  $state(undefined);
+  let nearestNeighborLoading: boolean = $state(false);
+
   async function runRouting() {
-    bruteForce(selectedBuildings).then(res => console.log(res));
+    if(selectedBuildings.length < 2) {
+      alert("Please select at least 2 buildings.")
+      return;
+    }
+    bruteForceLoading = true;
+    bruteForceResults = undefined;
+
+    twoOptLoading = true;
+    twoOptResults = undefined;
+
+    nearestNeighborLoading = true;
+    nearestNeighborResults = undefined;
+
+    await tick();
+    await new Promise(r => setTimeout(r))
+
+    
+    await nearestNeighbor(selectedBuildings).then(res => {
+      nearestNeighborResults = res;
+      nearestNeighborLoading = false;
+    })
+    bruteForce(selectedBuildings).then(res => {
+      bruteForceResults = res;
+      bruteForceLoading = false;
+    });
+
   }
 </script>
 
@@ -22,7 +58,7 @@
     </p>
 
     {#if selectedBuildings.length > 0}
-      <h2 class="font-bold text-2xl">Buildings</h2>
+      <h2 class="font-bold text-2xl">Buildings ({selectedBuildings.length})</h2>
       <ul class="text-lg list-inside">
         {#each selectedBuildings as building}
           <li>
@@ -68,9 +104,9 @@
     </div>
 
     <div class="flex flex-row gap-4 w-full mt-4 justify-between">
-      <ResultComponent order={selectedBuildings} name="Brute Force"/>
-      <ResultComponent order={selectedBuildings} name="2-Opt"/>
-      <ResultComponent order={selectedBuildings} name="Nearest Neighbor"/>
+      <ResultComponent name="Brute Force" results={bruteForceResults} loading={bruteForceLoading}/>
+      <ResultComponent name="2-Opt" results={twoOptResults} loading={twoOptLoading}/>
+      <ResultComponent name="Nearest Neighbor" results={nearestNeighborResults} loading={nearestNeighborLoading}/>
     </div>
   </div>
 </main>
