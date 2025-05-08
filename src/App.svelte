@@ -3,7 +3,7 @@
   import AutoComplete from "simple-svelte-autocomplete";
   import { buildings } from "./routing/buildings";
   import ResultComponent from "./lib/ResultComponent.svelte";
-  import { bruteForce, nearestNeighbor } from "./routing/algorithms";
+  import { bruteForce, nearestNeighbor, twoOpt } from "./routing/algorithms";
   import type { AlgorithmResults } from "./types";
   import { tick } from "svelte";
 
@@ -40,6 +40,10 @@
     await nearestNeighbor(selectedBuildings).then(res => {
       nearestNeighborResults = res;
       nearestNeighborLoading = false;
+    })
+    twoOpt(selectedBuildings).then(res => {
+      twoOptResults = res;
+      twoOptLoading = false;
     })
     bruteForce(selectedBuildings).then(res => {
       bruteForceResults = res;
